@@ -1,0 +1,971 @@
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins','Segoe UI',Arial,sans-serif}:root{--main:#5f8fa2;--dark:#2f4156;--accent:#88cde0;--bg:#eef5f7;--surface:#fff;--text:#243447;--muted:#66778a;--border:rgba(47,65,86,.15);--shadow:0 24px 70px rgba(47,65,86,.18);--danger:#d9534f;--ok:#2f9e66}html[data-theme=dark]{--bg:#0d1a24;--surface:#142636;--text:#edf7fb;--muted:#b7c9d5;--border:rgba(200,217,230,.18);--shadow:0 24px 70px rgba(0,0,0,.38)}body{min-height:100vh;background:radial-gradient(circle at top left,rgba(136,205,224,.28),transparent 34%),linear-gradient(135deg,var(--bg),rgba(95,143,162,.16));color:var(--text)}.auth-page{display:flex;align-items:center;justify-content:center;padding:32px 18px}.auth-controls{position:fixed;top:18px;left:18px;right:18px;display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:5;pointer-events:none}.auth-controls>*{pointer-events:auto}.mini-link,.control-btn,.control-select{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:14px;padding:10px 14px;font-weight:800;box-shadow:0 8px 24px rgba(47,65,86,.08);text-decoration:none}.container{width:100%;display:flex;justify-content:center;align-items:center}.card{width:min(430px,100%);padding:34px;background:var(--surface);border-radius:28px;box-shadow:var(--shadow);text-align:center;border:1px solid var(--border);animation:fadeIn .55s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}.auth-logo{width:70px;height:70px;object-fit:contain;border-radius:18px;margin-bottom:14px;background:rgba(95,143,162,.1);padding:6px}h2{font-size:2rem;color:var(--text);margin-bottom:8px}p{color:var(--muted);margin-bottom:20px}.card label{display:block;text-align:start;font-size:.9rem;font-weight:800;margin:10px 0 6px}select,input{width:100%;padding:13px 14px;margin:8px 0;border:1px solid var(--border);border-radius:14px;outline:none;background:rgba(255,255,255,.72);color:var(--text)}html[data-theme=dark] select,html[data-theme=dark] input{background:#0f202e}input:focus,select:focus{border-color:var(--main);box-shadow:0 0 0 4px rgba(95,143,162,.18)}button{width:100%;padding:14px;margin-top:12px;background:var(--main);color:white;border:none;border-radius:14px;cursor:pointer;transition:.25s;font-weight:800;font-size:1rem}button:hover{background:var(--dark);transform:translateY(-2px)}small{display:block;text-align:start;color:var(--danger);margin:0 0 5px;font-size:12px;min-height:16px}.login-link{margin-top:18px;font-size:14px}.login-link a{color:var(--main);font-weight:800;text-decoration:none}html[dir=rtl] body{text-align:right}html[dir=rtl] .auth-controls{direction:rtl}html[dir=rtl] small{text-align:right}@media(max-width:560px){.auth-controls{position:static;margin-bottom:18px;flex-wrap:wrap}.auth-page{display:block}.card{margin:auto}}
+
+/* ===== FINAL AUTH CONTROLS FIX ===== */
+/* Keeps language/theme compact on login & signup pages only */
+.auth-controls {
+  position: fixed !important;
+  top: 22px !important;
+  left: 24px !important;
+  right: 24px !important;
+  z-index: 20 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+  pointer-events: none !important;
+}
+
+.auth-controls .mini-link,
+.auth-controls .control-btn,
+.auth-controls .control-select {
+  pointer-events: auto !important;
+  width: auto !important;
+  max-width: none !important;
+  margin: 0 !important;
+  height: 48px !important;
+  border-radius: 16px !important;
+  border: 1px solid var(--border) !important;
+  background: color-mix(in srgb, var(--surface) 92%, transparent) !important;
+  color: var(--text) !important;
+  box-shadow: 0 10px 28px rgba(47, 65, 86, 0.12) !important;
+  backdrop-filter: blur(12px) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 800 !important;
+  font-size: 0.95rem !important;
+  text-decoration: none !important;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease !important;
+}
+
+.auth-controls .mini-link {
+  padding: 0 18px !important;
+  min-width: 112px !important;
+}
+
+.auth-controls .control-btn {
+  padding: 0 18px !important;
+  min-width: 112px !important;
+}
+
+.auth-controls .control-select {
+  padding: 0 42px 0 18px !important;
+  min-width: 150px !important;
+  cursor: pointer !important;
+}
+
+.auth-controls .mini-link:hover,
+.auth-controls .control-btn:hover,
+.auth-controls .control-select:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 14px 34px rgba(47, 65, 86, 0.16) !important;
+  border-color: color-mix(in srgb, var(--main) 45%, var(--border)) !important;
+}
+
+html[data-theme="dark"] .auth-controls .mini-link,
+html[data-theme="dark"] .auth-controls .control-btn,
+html[data-theme="dark"] .auth-controls .control-select {
+  background: rgba(20, 38, 54, 0.92) !important;
+  color: var(--text) !important;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.34) !important;
+}
+
+.auth-page .container {
+  min-height: 100vh !important;
+  padding-top: 76px !important;
+}
+
+.auth-page .card {
+  margin-top: 18px !important;
+}
+
+html[dir="rtl"] .auth-controls {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .auth-controls .control-select {
+  padding: 0 18px 0 42px !important;
+}
+
+@media (max-width: 640px) {
+  .auth-controls {
+    position: static !important;
+    padding: 16px !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .auth-page {
+    display: block !important;
+  }
+
+  .auth-page .container {
+    min-height: auto !important;
+    padding-top: 10px !important;
+  }
+
+  .auth-controls .mini-link,
+  .auth-controls .control-btn,
+  .auth-controls .control-select {
+    flex: 1 1 120px !important;
+  }
+}
+
+/* ===== PROFESSIONAL AUTH TOP CONTROLS - FINAL FIX ===== */
+/* Compact floating toolbar for Login / Sign Up controls */
+body.auth-page {
+  padding-top: 104px !important;
+}
+
+body.auth-page .auth-controls {
+  position: fixed !important;
+  top: 22px !important;
+  inset-inline-end: 24px !important;
+  inset-inline-start: auto !important;
+  right: auto !important;
+  left: auto !important;
+  width: auto !important;
+  max-width: calc(100vw - 48px) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  padding: 8px !important;
+  border-radius: 22px !important;
+  border: 1px solid var(--border) !important;
+  background: color-mix(in srgb, var(--surface) 88%, transparent) !important;
+  box-shadow: 0 18px 48px rgba(47, 65, 86, 0.14) !important;
+  backdrop-filter: blur(18px) !important;
+  z-index: 50 !important;
+  pointer-events: auto !important;
+}
+
+html[data-theme="dark"] body.auth-page .auth-controls {
+  background: rgba(20, 38, 54, 0.9) !important;
+  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.38) !important;
+}
+
+body.auth-page .auth-controls .mini-link,
+body.auth-page .auth-controls .control-btn,
+body.auth-page .auth-controls .control-select {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  flex: 0 0 auto !important;
+  height: 42px !important;
+  margin: 0 !important;
+  padding: 0 16px !important;
+  border-radius: 16px !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  color: var(--text) !important;
+  box-shadow: none !important;
+  font-size: 0.92rem !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease, color .18s ease !important;
+}
+
+body.auth-page .auth-controls .mini-link:hover,
+body.auth-page .auth-controls .control-btn:hover,
+body.auth-page .auth-controls .control-select:hover,
+body.auth-page .auth-controls .mini-link:focus-visible,
+body.auth-page .auth-controls .control-btn:focus-visible,
+body.auth-page .auth-controls .control-select:focus-visible {
+  background: color-mix(in srgb, var(--main) 13%, transparent) !important;
+  border-color: color-mix(in srgb, var(--main) 40%, transparent) !important;
+  transform: translateY(-1px) !important;
+  outline: none !important;
+}
+
+body.auth-page .auth-controls .mini-link {
+  background: color-mix(in srgb, var(--main) 12%, transparent) !important;
+  color: var(--dark) !important;
+}
+
+html[data-theme="dark"] body.auth-page .auth-controls .mini-link {
+  color: var(--text) !important;
+}
+
+body.auth-page .auth-controls .control-btn {
+  min-width: 96px !important;
+}
+
+body.auth-page .auth-controls select.control-select {
+  inline-size: 122px !important;
+  width: 122px !important;
+  min-width: 122px !important;
+  max-width: 122px !important;
+  appearance: auto !important;
+  -webkit-appearance: menulist !important;
+  text-align: center !important;
+  text-align-last: center !important;
+  padding-inline: 12px !important;
+}
+
+html[dir="rtl"] body.auth-page .auth-controls {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] body.auth-page .auth-controls select.control-select {
+  text-align-last: center !important;
+}
+
+@media (max-width: 640px) {
+  body.auth-page {
+    padding-top: 18px !important;
+  }
+
+  body.auth-page .auth-controls {
+    position: relative !important;
+    top: auto !important;
+    inset-inline: auto !important;
+    margin: 0 auto 18px !important;
+    width: fit-content !important;
+    max-width: calc(100vw - 32px) !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+}
+
+/* ===== AUTH PAGE FINAL SPACING + DROPDOWN READABILITY ===== */
+/* Fixes login/signup toolbar spacing and the invisible language dropdown text. */
+body.auth-page {
+  display: block !important;
+  min-height: 100vh !important;
+  padding: 0 18px 24px !important;
+  overflow-y: auto !important;
+}
+
+body.auth-page .auth-controls {
+  top: 18px !important;
+  inset-inline-start: 50% !important;
+  inset-inline-end: auto !important;
+  transform: translateX(-50%) !important;
+  max-width: calc(100vw - 32px) !important;
+  padding: 7px !important;
+  gap: 8px !important;
+  border-radius: 20px !important;
+}
+
+body.auth-page .auth-controls .mini-link,
+body.auth-page .auth-controls .control-btn,
+body.auth-page .auth-controls .control-select {
+  height: 40px !important;
+  padding-inline: 14px !important;
+  border-radius: 14px !important;
+  font-size: 0.9rem !important;
+}
+
+body.auth-page .auth-controls select.control-select {
+  width: 118px !important;
+  min-width: 118px !important;
+  max-width: 118px !important;
+  color: var(--text) !important;
+  background-color: transparent !important;
+}
+
+/* Native dropdown options need explicit colors; otherwise they disappear in dark mode. */
+body.auth-page .auth-controls select.control-select option,
+body.auth-page select option {
+  background: #ffffff !important;
+  color: #243447 !important;
+}
+
+body.auth-page .container {
+  min-height: auto !important;
+  padding-top: 96px !important;
+  padding-bottom: 24px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+}
+
+body.auth-page .card {
+  margin: 0 auto !important;
+  padding: 28px 32px !important;
+}
+
+body.auth-page .auth-logo {
+  width: 64px !important;
+  height: 64px !important;
+  margin-bottom: 10px !important;
+}
+
+body.auth-page h2 {
+  margin-bottom: 6px !important;
+  line-height: 1.15 !important;
+}
+
+body.auth-page p {
+  margin-bottom: 16px !important;
+}
+
+body.auth-page input,
+body.auth-page select:not(.control-select) {
+  margin: 6px 0 !important;
+  padding: 12px 14px !important;
+}
+
+body.auth-page button:not(#themeToggle) {
+  margin-top: 10px !important;
+}
+
+body.auth-page .login-link {
+  margin-top: 14px !important;
+  margin-bottom: 0 !important;
+}
+
+@media (max-height: 760px) {
+  body.auth-page .container {
+    padding-top: 84px !important;
+  }
+  body.auth-page .card {
+    padding: 24px 30px !important;
+  }
+  body.auth-page .auth-logo {
+    width: 56px !important;
+    height: 56px !important;
+  }
+  body.auth-page h2 {
+    font-size: 1.75rem !important;
+  }
+  body.auth-page p {
+    margin-bottom: 12px !important;
+  }
+  body.auth-page input,
+  body.auth-page select:not(.control-select) {
+    padding: 11px 13px !important;
+    margin: 5px 0 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  body.auth-page .auth-controls {
+    position: sticky !important;
+    top: 12px !important;
+    transform: none !important;
+    inset-inline-start: auto !important;
+    margin: 12px auto 14px !important;
+  }
+  body.auth-page .container {
+    padding-top: 0 !important;
+  }
+}
+
+/* ===== COMPACT AUTH PAGE FIX - FINAL USER REQUEST ===== */
+/* Only touches login/signup top controls, spacing, and dropdown readability. */
+body.auth-page {
+  min-height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding: 16px 18px 28px !important;
+  overflow-y: auto !important;
+}
+
+body.auth-page .auth-controls {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  inset: auto !important;
+  inset-inline-start: auto !important;
+  inset-inline-end: auto !important;
+  transform: none !important;
+  width: auto !important;
+  max-width: calc(100vw - 36px) !important;
+  margin: 0 auto 22px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 8px !important;
+  border-radius: 22px !important;
+  border: 1px solid var(--border) !important;
+  background: color-mix(in srgb, var(--surface) 90%, transparent) !important;
+  box-shadow: 0 18px 44px rgba(47, 65, 86, 0.14) !important;
+  backdrop-filter: blur(18px) !important;
+  z-index: 60 !important;
+  pointer-events: auto !important;
+}
+
+html[data-theme="dark"] body.auth-page .auth-controls {
+  background: rgba(20, 38, 54, 0.94) !important;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.34) !important;
+}
+
+body.auth-page .auth-controls .mini-link,
+body.auth-page .auth-controls .control-btn,
+body.auth-page .auth-controls .control-select {
+  height: 42px !important;
+  min-height: 42px !important;
+  width: auto !important;
+  min-width: 104px !important;
+  max-width: 150px !important;
+  margin: 0 !important;
+  padding: 0 15px !important;
+  border-radius: 15px !important;
+  border: 1px solid transparent !important;
+  background: color-mix(in srgb, var(--main) 8%, transparent) !important;
+  color: var(--text) !important;
+  box-shadow: none !important;
+  font-size: 0.92rem !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+}
+
+body.auth-page .auth-controls .control-select {
+  display: block !important;
+  width: 128px !important;
+  min-width: 128px !important;
+  max-width: 128px !important;
+  text-align: center !important;
+  text-align-last: center !important;
+  appearance: auto !important;
+  -webkit-appearance: menulist !important;
+}
+
+/* Make native select dropdown options readable in both themes. */
+body.auth-page select option,
+body.auth-page .control-select option,
+html[data-theme="dark"] body.auth-page select option,
+html[data-theme="dark"] body.auth-page .control-select option {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+body.auth-page select option:checked,
+body.auth-page .control-select option:checked {
+  background-color: #5f8fa2 !important;
+  color: #ffffff !important;
+}
+
+body.auth-page .container {
+  width: 100% !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+}
+
+body.auth-page .card {
+  margin: 0 auto !important;
+  padding: 26px 32px !important;
+  border-radius: 26px !important;
+}
+
+body.auth-page .auth-logo {
+  width: 58px !important;
+  height: 58px !important;
+  margin-bottom: 10px !important;
+}
+
+body.auth-page h2 {
+  font-size: 1.78rem !important;
+  margin-bottom: 6px !important;
+  line-height: 1.12 !important;
+}
+
+body.auth-page p {
+  margin-bottom: 13px !important;
+}
+
+body.auth-page .card label {
+  margin: 8px 0 4px !important;
+}
+
+body.auth-page input,
+body.auth-page select:not(.control-select) {
+  padding: 11px 13px !important;
+  margin: 5px 0 !important;
+  min-height: 45px !important;
+}
+
+body.auth-page small {
+  min-height: 13px !important;
+  margin-bottom: 2px !important;
+}
+
+body.auth-page button:not(#themeToggle) {
+  margin-top: 9px !important;
+  padding: 13px !important;
+}
+
+body.auth-page .login-link {
+  margin-top: 12px !important;
+  margin-bottom: 0 !important;
+}
+
+@media (max-width: 640px) {
+  body.auth-page {
+    padding: 12px 14px 24px !important;
+  }
+  body.auth-page .auth-controls {
+    width: 100% !important;
+    max-width: 430px !important;
+    flex-wrap: wrap !important;
+    margin-bottom: 18px !important;
+  }
+  body.auth-page .auth-controls .mini-link,
+  body.auth-page .auth-controls .control-btn,
+  body.auth-page .auth-controls .control-select {
+    flex: 1 1 118px !important;
+    min-width: 118px !important;
+  }
+  body.auth-page .card {
+    padding: 24px 22px !important;
+  }
+}
+
+/* ===== VALIDATION + PHONE FIELD POLISH ===== */
+body.auth-page .field-hint,
+body.auth-page .password-hint {
+  margin: 2px 0 7px !important;
+  color: var(--muted) !important;
+  font-size: 0.76rem !important;
+  line-height: 1.35 !important;
+  text-align: start !important;
+}
+
+body.auth-page small {
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+}
+
+html[dir="rtl"] body.auth-page .field-hint,
+html[dir="rtl"] body.auth-page .password-hint {
+  text-align: right !important;
+}
+
+/* ===== FINAL AUTH UX: PASSWORD VISIBILITY + CONFIRM PASSWORD ===== */
+body.auth-page .password-wrap {
+  position: relative !important;
+  width: 100% !important;
+  margin: 5px 0 !important;
+}
+
+body.auth-page .password-wrap input {
+  width: 100% !important;
+  margin: 0 !important;
+  padding-inline-end: 52px !important;
+}
+
+html[dir="rtl"] body.auth-page .password-wrap input {
+  padding-inline-end: 13px !important;
+  padding-inline-start: 52px !important;
+}
+
+body.auth-page .toggle-password {
+  position: absolute !important;
+  inset-inline-end: 8px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 12px !important;
+  border: 1px solid color-mix(in srgb, var(--main) 18%, transparent) !important;
+  background: color-mix(in srgb, var(--main) 9%, transparent) !important;
+  color: var(--text) !important;
+  display: grid !important;
+  place-items: center !important;
+  line-height: 1 !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+}
+
+html[dir="rtl"] body.auth-page .toggle-password {
+  inset-inline-end: auto !important;
+  inset-inline-start: 8px !important;
+}
+
+body.auth-page .toggle-password:hover {
+  background: color-mix(in srgb, var(--main) 16%, transparent) !important;
+  transform: translateY(-50%) scale(1.03) !important;
+}
+
+body.auth-page #confirmMsg {
+  display: block !important;
+}
+
+/* ===== FINAL FIX: PASSWORD EYE BUTTON ALIGNMENT ===== */
+body.auth-page .password-wrap {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 8px 0 !important;
+}
+
+body.auth-page .password-wrap input {
+  width: 100% !important;
+  height: 52px !important;
+  margin: 0 !important;
+  padding-inline-end: 56px !important;
+}
+
+html[dir="rtl"] body.auth-page .password-wrap input {
+  padding-inline-end: 14px !important;
+  padding-inline-start: 56px !important;
+}
+
+body.auth-page .password-wrap .toggle-password {
+  position: absolute !important;
+  top: 50% !important;
+  inset-inline-end: 10px !important;
+  transform: translateY(-50%) !important;
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  max-width: 38px !important;
+  max-height: 38px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 12px !important;
+  display: grid !important;
+  place-items: center !important;
+  line-height: 1 !important;
+  font-size: 15px !important;
+  background: rgba(95, 143, 162, 0.16) !important;
+  border: 1px solid rgba(136, 205, 224, 0.22) !important;
+  color: var(--text) !important;
+  box-shadow: none !important;
+  z-index: 2 !important;
+}
+
+html[dir="rtl"] body.auth-page .password-wrap .toggle-password {
+  inset-inline-end: auto !important;
+  inset-inline-start: 10px !important;
+}
+
+body.auth-page .password-wrap .toggle-password:hover {
+  transform: translateY(-50%) !important;
+  background: rgba(95, 143, 162, 0.26) !important;
+}
+
+/* ===== FINAL SIGNUP FIELD + PASSWORD EYE CLEANUP ===== */
+body.auth-page .field-hint-before {
+  margin: 14px 0 6px !important;
+  text-align: left !important;
+  font-size: 0.78rem !important;
+  line-height: 1.45 !important;
+  color: var(--muted) !important;
+}
+html[dir="rtl"] body.auth-page .field-hint-before {
+  text-align: right !important;
+}
+body.auth-page .password-wrap {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 8px 0 !important;
+}
+body.auth-page .password-wrap input {
+  width: 100% !important;
+  height: 52px !important;
+  margin: 0 !important;
+  padding-right: 56px !important;
+  padding-left: 14px !important;
+  line-height: 52px !important;
+}
+html[dir="rtl"] body.auth-page .password-wrap input {
+  padding-right: 14px !important;
+  padding-left: 56px !important;
+  text-align: right !important;
+}
+body.auth-page .password-wrap .toggle-password {
+  position: absolute !important;
+  right: 10px !important;
+  left: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  max-width: 38px !important;
+  max-height: 38px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 12px !important;
+  display: grid !important;
+  place-items: center !important;
+  line-height: 1 !important;
+  font-size: 15px !important;
+  background: rgba(95, 143, 162, 0.16) !important;
+  border: 1px solid rgba(95, 143, 162, 0.26) !important;
+  color: var(--text) !important;
+  box-shadow: none !important;
+  z-index: 4 !important;
+}
+html[dir="rtl"] body.auth-page .password-wrap .toggle-password {
+  right: auto !important;
+  left: 10px !important;
+}
+body.auth-page .password-wrap .toggle-password:hover {
+  transform: translateY(-50%) !important;
+  background: rgba(95, 143, 162, 0.28) !important;
+}
+body.auth-page .password-wrap .toggle-password span {
+  display: block !important;
+  line-height: 1 !important;
+}
+
+/* ===== TRUE FINAL FIX: PASSWORD HINT LOCATION + EYE BUTTON DIRECTION ===== */
+/* English: left. Arabic: right. */
+body.auth-page .password-hint {
+  margin: 14px 0 6px !important;
+  text-align: left !important;
+  font-size: 0.78rem !important;
+  line-height: 1.45 !important;
+  color: var(--muted) !important;
+}
+html[dir="rtl"] body.auth-page .password-hint {
+  text-align: right !important;
+}
+body.auth-page .password-wrap {
+  position: relative !important;
+  width: 100% !important;
+  margin: 8px 0 !important;
+}
+body.auth-page .password-wrap input {
+  height: 52px !important;
+  line-height: normal !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: 56px !important;
+  padding-right: 14px !important;
+}
+html[dir="rtl"] body.auth-page .password-wrap input {
+  padding-left: 14px !important;
+  padding-right: 56px !important;
+  text-align: right !important;
+}
+body.auth-page .password-wrap .toggle-password {
+  position: absolute !important;
+  top: 50% !important;
+  left: 10px !important;
+  right: auto !important;
+  transform: translateY(-50%) !important;
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  max-width: 38px !important;
+  max-height: 38px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 12px !important;
+  display: grid !important;
+  place-items: center !important;
+  line-height: 1 !important;
+  font-size: 15px !important;
+  background: rgba(95, 143, 162, 0.16) !important;
+  border: 1px solid rgba(95, 143, 162, 0.26) !important;
+  color: var(--text) !important;
+  box-shadow: none !important;
+  z-index: 4 !important;
+}
+html[dir="rtl"] body.auth-page .password-wrap .toggle-password {
+  left: auto !important;
+  right: 10px !important;
+}
+body.auth-page .password-wrap .toggle-password:hover {
+  transform: translateY(-50%) !important;
+  background: rgba(95, 143, 162, 0.28) !important;
+}
+body.auth-page .password-wrap .toggle-password span {
+  display: block !important;
+  line-height: 1 !important;
+}
+
+/* ===== FINAL FINAL PASSWORD TOGGLE POSITION FIX ===== */
+/* Requested only: English = right, Arabic = left, centered vertically inside the input. */
+body.auth-page .password-wrap {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 5px 0 !important;
+}
+
+body.auth-page .password-wrap input {
+  display: block !important;
+  width: 100% !important;
+  min-height: 45px !important;
+  height: 45px !important;
+  line-height: 1.2 !important;
+  margin: 0 !important;
+  padding-block: 0 !important;
+  padding-inline-start: 14px !important;
+  padding-inline-end: 54px !important;
+}
+
+body.auth-page .password-wrap .toggle-password {
+  position: absolute !important;
+  top: 50% !important;
+  bottom: auto !important;
+  transform: translateY(-50%) !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  max-width: 36px !important;
+  max-height: 36px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  z-index: 5 !important;
+}
+
+/* English / LTR: eye on the RIGHT */
+html[dir="ltr"] body.auth-page .password-wrap .toggle-password {
+  right: 8px !important;
+  left: auto !important;
+}
+
+/* Arabic / RTL: eye on the LEFT */
+html[dir="rtl"] body.auth-page .password-wrap .toggle-password {
+  left: 8px !important;
+  right: auto !important;
+}
+
+html[dir="rtl"] body.auth-page .password-wrap input {
+  padding-inline-start: 54px !important;
+  padding-inline-end: 14px !important;
+}
+
+
+/* ===== REAL FINAL PASSWORD EYE FIX - DO NOT REMOVE =====
+   Only fixes show/hide password button placement.
+   English/LTR: right side. Arabic/RTL: left side.
+*/
+body.auth-page .password-wrap{
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 6px 0 !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+body.auth-page .password-wrap input{
+  display: block !important;
+  width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  line-height: 48px !important;
+  margin: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* default/LTR: input text leaves space on right */
+html[dir="ltr"] body.auth-page .password-wrap input,
+html:not([dir="rtl"]) body.auth-page .password-wrap input{
+  padding-left: 14px !important;
+  padding-right: 58px !important;
+}
+
+/* RTL: input text leaves space on left */
+html[dir="rtl"] body.auth-page .password-wrap input{
+  padding-right: 14px !important;
+  padding-left: 58px !important;
+}
+
+body.auth-page .password-wrap .toggle-password{
+  position: absolute !important;
+  top: 50% !important;
+  bottom: auto !important;
+  transform: translateY(-50%) !important;
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  max-width: 38px !important;
+  max-height: 38px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 1px solid rgba(95,143,162,.22) !important;
+  border-radius: 12px !important;
+  background: color-mix(in srgb, var(--main) 18%, var(--surface)) !important;
+  color: var(--text) !important;
+  box-shadow: none !important;
+  display: grid !important;
+  place-items: center !important;
+  line-height: 1 !important;
+  font-size: 15px !important;
+  cursor: pointer !important;
+  z-index: 20 !important;
+}
+
+html[data-theme="dark"] body.auth-page .password-wrap .toggle-password{
+  background: rgba(95,143,162,.26) !important;
+  border-color: rgba(200,217,230,.18) !important;
+}
+
+/* English/LTR = RIGHT */
+html[dir="ltr"] body.auth-page .password-wrap .toggle-password,
+html:not([dir="rtl"]) body.auth-page .password-wrap .toggle-password{
+  right: 7px !important;
+  left: auto !important;
+}
+
+/* Arabic/RTL = LEFT */
+html[dir="rtl"] body.auth-page .password-wrap .toggle-password{
+  left: 7px !important;
+  right: auto !important;
+}
+
+body.auth-page .password-wrap .toggle-password span{
+  display: block !important;
+  line-height: 1 !important;
+  pointer-events: none !important;
+}
+
+/* ===== FINAL FINAL PASSWORD EYE POSITION OVERRIDE ===== */
+/* Small vertical lift requested: keeps the eye button fully inside the password boxes. */
+body.auth-page .password-wrap .toggle-password{
+  top: 45% !important;
+  transform: translateY(-50%) !important;
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  max-width: 34px !important;
+  max-height: 34px !important;
+  border-radius: 11px !important;
+}
+
+html[dir="ltr"] body.auth-page .password-wrap .toggle-password,
+html:not([dir="rtl"]) body.auth-page .password-wrap .toggle-password{
+  right: 10px !important;
+  left: auto !important;
+}
+
+html[dir="rtl"] body.auth-page .password-wrap .toggle-password{
+  left: 10px !important;
+  right: auto !important;
+}

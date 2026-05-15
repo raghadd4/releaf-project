@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReLeaf</title>
+<link rel="stylesheet" href="styleM.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<header>
+  <a href="#top" class="logo"><img src="logo.jpg" alt="ReLeaf Logo"><span>ReLeaf</span></a>
+  <nav><ul>
+    <li><a href="#top" data-i18n="home">Home</a></li><li><a href="#about" data-i18n="about">About</a></li><li><a href="#work" data-i18n="how">How it Works</a></li><li><a href="login.html" data-i18n="login">Login</a></li><li><a href="signup.html" class="btn nav-signup" data-i18n="signup">Sign Up</a></li>
+  </ul></nav>
+  <div class="controls"><button id="themeToggle" class="control-btn"></button><select id="languageToggle" class="control-select"><option value="en">English</option><option value="ar">العربية</option></select></div>
+</header>
+<main>
+<section id="top" class="hero"><img src="top.png" alt="Banner" class="hero-img"><div class="hero-overlay"></div><div class="hero-text"><span class="eyebrow" data-i18n="eyebrow">Smart paper recycling platform</span><h1 data-i18n-html="heroTitle">Join us to protect the environment
+</h1><p data-i18n="heroText">Start your recycling journey with ReLeaf today.
+
+</p><div class="hero-buttons"><a href="signup.html" class="btn green" data-i18n="getStarted">Get Started</a><a href="login.html" class="btn white" data-i18n="login">Login</a></div></div></section>
+<section class="benefits" aria-label="ReLeaf benefits">
+  <div class="benefit-pill"><span class="benefit-icon">🌱</span><div><h3 data-i18n="b1">Eco-friendly</h3><p data-i18n="b1t">Designed to make paper recycling easier for daily operations.</p></div></div>
+  <div class="benefit-pill"><span class="benefit-icon">⚡</span><div><h3 data-i18n="b2">Simple workflow</h3><p data-i18n="b2t">Submit, organize, and follow recycling requests from one place.</p></div></div>
+  <div class="benefit-pill"><span class="benefit-icon">🔒</span><div><h3 data-i18n="b3">Organized access</h3><p data-i18n="b3t">Separate customer and admin access for clearer management.</p></div></div>
+</section>
+<section class="features"><div class="feature-card"><img src="jadwalah.png"><h3 data-i18n="f1">For Institutions</h3><p data-i18n="f1t">Easily schedule pickups and track your collection requests.</p></div><div class="feature-card"><img src="altadweer.png"><h3 data-i18n="f2">For Recycling Centers</h3><p data-i18n="f2t">Receive organized requests and collect more recyclable materials.</p></div><div class="feature-card"><img src="earth.png"><h3 data-i18n="f3">Eco-Friendly Solution</h3><p data-i18n="f3t">Support sustainable practices and reduce paper waste.</p></div></section>
+<section id="about" class="about-section"><div class="content-card"><span class="section-label" data-i18n="aboutLabel">About ReLeaf</span><h2 data-i18n-html="why">Why <span>ReLeaf</span>?</h2><p data-i18n="whyText">We bridge the gap between businesses with paper waste and recycling centers to create a cleaner, greener future.</p></div></section>
+<section id="work" class="work-section"><span class="section-label" data-i18n="process">Process</span><h2 data-i18n="workTitle">How ReLeaf Works</h2><div class="steps"><div class="step"><img src="login.png"><h4 data-i18n="s1">1. List Your Paper Waste</h4><p data-i18n="s1t">Register your institution and add paper or carton details.</p></div><div class="step"><img src="connect.png"><h4 data-i18n="s2">2. Match with Recycling Centers</h4><p data-i18n="s2t">Get connected with the best recycling partner.</p></div><div class="step"><img src="secdial.png"><h4 data-i18n="s3">3. Schedule & Track Pickup</h4><p data-i18n="s3t">Choose a time and track the collection process.</p></div></div></section>
+<section class="cta"><h2 data-i18n="cta">Connecting Businesses with Recycling Centers</h2><p data-i18n="ctaText">Bridging the gap between institutions with paper waste and recycling centers.</p><div class="hero-buttons"><a href="signup.html" class="btn green" data-i18n="signup">Sign Up</a><a href="login.html" class="btn white" data-i18n="login">Login</a></div></section>
+<footer class="site-footer">
+  <div class="footer-brand">
+    <a href="#top" class="footer-logo"><img src="logo.jpg" alt="ReLeaf Logo"><span>ReLeaf</span></a>
+    <p data-i18n="footerText">A cleaner way to connect paper waste with recycling partners.</p>
+  </div>
+  <div class="footer-links">
+    <a href="#about" data-i18n="about">About</a>
+    <a href="#work" data-i18n="how">How it Works</a>
+    <a href="login.html" data-i18n="login">Login</a>
+    <a href="signup.html" data-i18n="signup">Sign Up</a>
+  </div>
+  <div class="footer-bottom">
+    <span data-i18n="footerRights">© 2026 ReLeaf. All rights reserved.</span>
+  </div>
+</footer>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="firebase-init.js"></script>
+<script src="jj.js"></script>
+<script src="firebase-sync.js"></script>
+</body></html>

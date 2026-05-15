@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReLeaf | Eco-Dashboard</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .alert-mode { background: rgba(255, 68, 68, 0.15) !important; border: 1px solid #ff4444 !important; }
+        #cancelModal .modal-content { max-width: 400px; text-align: center; border: 1px solid #ff4444; }
+        .reason-select { width: 100%; padding: 12px; background: #0D1117; border: 1px solid #333; border-radius: 10px; color: white; margin-bottom: 20px; font-family: 'Outfit'; }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            background: #0D1117;
+            border: 1px solid #333;
+            border-radius: 10px;
+            color: white;
+            font-family: 'Outfit';
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blob"></div>
+    <div class="bg-blob2"></div>
+
+    <div class="glass-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="brand">
+                    <span class="brand-logo-wrap">
+                        <img src="logo.jpg" alt="" class="brand-logo-img" width="52" height="52">
+                    </span>
+                    <i data-lucide="leaf" class="logo-icon brand-leaf-fallback" aria-hidden="true"></i>
+                    <h2 class="brand-name">Re<span>Leaf</span></h2>
+                </div>
+                <div class="user-card">
+                    <div class="avatar" id="sidebarAvatar" aria-hidden="true">
+                        <img id="sidebarAvatarImg" class="sidebar-avatar-img" alt="">
+                        <span id="sidebarAvatarInitials">JS</span>
+                    </div>
+                    <div class="user-meta">
+                        <h4 id="sidebarGreeting">Hello!</h4>
+                        <p id="sidebarSubtitle" class="sidebar-subtitle">Seedling · ReLeaf member</p>
+                    </div>
+                </div>
+                <nav class="nav-links">
+                    <a href="#" class="active" id="navDashboard"><i data-lucide="layout-dashboard"></i> <span id="txtNavDashboard">Dashboard</span></a>
+                    <a href="#" id="navRequests"><i data-lucide="package"></i> <span id="txtNavRequests">My Requests</span></a>
+                    <a href="#" id="navProfile"><i data-lucide="user"></i> <span id="txtNavProfile">Profile</span></a>
+                    <a href="#" id="contactBtn"><i data-lucide="message-square"></i> <span id="txtNavContact">Contact Admin</span></a>
+                    <a href="#" id="logoutBtn"><i data-lucide="log-out"></i> <span id="txtLogout" data-i18n="logout">Sign Out</span></a>
+                </nav>
+            </div>
+            <div class="location-card" id="locCard">
+                <div class="loc-header">
+                    <span><i data-lucide="map-pin"></i> Collection address</span>
+                    <button type="button" id="updateLocBtn" title="Update GPS (also saves to your profile)">Update GPS</button>
+                </div>
+                <p id="displayAddress">Set in Profile</p>
+                <small id="displayCoords">Same as your saved collection address</small>
+            </div>
+        </aside>
+
+        <main class="main-stage">
+            <header class="top-nav">
+                <div class="top-nav-brand-lockup">
+                    <span class="top-nav-logo-wrap">
+                        <img src="logo.jpg" alt="" class="top-nav-logo" width="44" height="44">
+                    </span>
+                    <h1 id="welcomeText">Hi there!</h1>
+                </div>
+                <div class="top-nav-actions">
+                    <select id="languageToggle" class="lang-select" aria-label="Language">
+                        <option value="en">English</option>
+                        <option value="ar">العربية</option>
+                    </select>
+                    <button type="button" id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+                        <span class="theme-icon">🌙</span>
+                        <span class="theme-label" data-i18n="darkMode">Dark</span>
+                    </button>
+                    <button class="btn-main locked" id="openFormBtn">Add Paper / Carton +</button>
+                </div>
+            </header>
+
+            <section class="stats-row">
+                <div class="stat-card">
+                    <i data-lucide="tree-pine" class="stat-icon-svg"></i>
+                    <div><h3 id="treeCount">0</h3><p>Trees Saved</p></div>
+                </div>
+                <div class="stat-card">
+                    <i data-lucide="refresh-cw" class="stat-icon-svg"></i>
+                    <div><h3 id="weightCount">0kg</h3><p>Recycled</p></div>
+                </div>
+                <div class="stat-card clickable-level" id="levelCard">
+                    <i data-lucide="award" class="stat-icon-svg"></i>
+                    <div><h3 id="userLevel">Seedling</h3><p>Current Rank</p></div>
+                </div>
+            </section>
+
+            <section class="weekly-flow-card" id="weeklyFlowSection">
+                <div class="weekly-flow-head">
+                    <div>
+                        <h3 id="weeklyFlowTitle">Jordan Paper Recycling This Week</h3>
+                        <p id="weeklyFlowSubtitle">Stable weekly estimate for paper/cardboard recycling across Jordan</p>
+                    </div>
+                    <div class="weekly-flow-total">
+                        <strong id="weeklyFlowTotal">0</strong>
+                        <span>operations</span>
+                    </div>
+                </div>
+                <div class="weekly-flow-chart" id="weeklyFlowChart"></div>
+            </section>
+
+            <div class="table-container">
+                <h3 id="txtRecentActivity">Recent Activity</h3>
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Type</th><th>Weight</th><th>Status</th></tr>
+                    </thead>
+                    <tbody id="activityTable">
+                        <tr id="emptyMsg">
+                            <td colspan="4" style="text-align:center; opacity:0.5; padding: 40px;">No requests yet. Add your first collection request!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="trackerContainer" style="display: flex; flex-direction: column; gap: 20px; margin-top: 50px;"></div>
+
+            <section id="myRequestsPage" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <h2 id="txtRequestsHistory">Requests History</h2>
+                    <div class="segmented-control" style="width: auto; gap: 10px;">
+                        <button class="seg-btn active" id="txtFilterAll" onclick="filterRequests('all')">All</button>
+                        <button class="seg-btn" id="txtFilterActive" onclick="filterRequests('active')">Active</button>
+                        <button class="seg-btn" id="txtFilterCompleted" onclick="filterRequests('completed')">Completed</button>
+                    </div>
+                </div>
+                <div id="detailedRequestsList" style="display: grid; gap: 20px;"></div>
+            </section>
+
+            <div id="profileSection" style="display: none;">
+                <input type="file" id="profilePhotoInput" class="profile-file-input" accept="image/jpeg,image/png,image/webp,image/gif" aria-hidden="true" tabindex="-1">
+                <div class="profile-shell">
+                    <nav class="profile-breadcrumb" aria-label="Breadcrumb">
+                        <span>Account</span>
+                        <i data-lucide="chevron-right" class="profile-bc-icon"></i>
+                        <span class="profile-breadcrumb-current">My profile</span>
+                    </nav>
+
+                    <header class="profile-hero">
+                        <div class="profile-hero-main">
+                            <div class="profile-hero-avatar-block">
+                                <div class="profile-hero-avatar" id="profileHeroAvatar" aria-hidden="true">
+                                    <img id="profileHeroAvatarImg" class="profile-hero-avatar-img" alt="">
+                                    <span class="profile-hero-initials" id="profileHeroInitials">JS</span>
+                                </div>
+                                <div class="profile-hero-photo-actions">
+                                    <button type="button" class="text-btn upload" id="profileChangePhotoBtn">Change photo</button>
+                                    <button type="button" class="text-btn remove" id="profileRemovePhotoBtn">Remove</button>
+                                </div>
+                            </div>
+                            <div class="profile-hero-copy">
+                                <h2 class="profile-hero-name" id="profileHeroName">Jana Saleh</h2>
+                                <p class="profile-hero-email" id="profileHeroEmail">jana.s@university.edu.jo</p>
+                                <div class="profile-hero-badges">
+                                    <span class="profile-pill profile-pill--accent"><i data-lucide="award"></i> <span id="profileHeroRankLabel">Seedling</span></span>
+                                    <span class="profile-pill"><i data-lucide="shield-check"></i> Verified</span>
+                                </div>
+                            </div>
+                        </div>
+                        <dl class="profile-summary">
+                            <div class="profile-summary-item">
+                                <dt>Name</dt>
+                                <dd id="profileDdSummaryName">Jana Saleh</dd>
+                            </div>
+                            <div class="profile-summary-item">
+                                <dt>Email</dt>
+                                <dd id="profileDdSummaryEmail">jana.s@university.edu.jo</dd>
+                            </div>
+                            <div class="profile-summary-item">
+                                <dt>Phone</dt>
+                                <dd id="profileDdSummaryPhone">+962 7X XXX XXXX</dd>
+                            </div>
+                            <div class="profile-summary-item">
+                                <dt>Collection address</dt>
+                                <dd id="profileDdLocation">Not set yet</dd>
+                            </div>
+                            <div class="profile-summary-item">
+                                <dt>Member since</dt>
+                                <dd>January 2026</dd>
+                            </div>
+                            <div class="profile-summary-item">
+                                <dt>Username</dt>
+                                <dd id="profileDdUsername">@janasaleh02</dd>
+                            </div>
+                        </dl>
+                    </header>
+
+                    <div class="profile-cards">
+                        <section class="profile-card" aria-labelledby="profile-personal-heading">
+                            <div class="profile-card-head">
+                                <h3 id="profile-personal-heading">Contact &amp; collection</h3>
+                                <p id="txtContactCollectionDesc">We use this to reach you and to route collections. Edit fields below, then tap <strong>Save changes</strong> at the bottom to store them on this device.</p>
+                            </div>
+                            <div class="profile-card-body">
+                                <button type="button" class="profile-field-row" data-profile-field="fullName">
+                                    <span class="profile-field-label">Full name</span>
+                                    <span class="profile-field-value">Jana Saleh</span>
+                                    <i data-lucide="chevron-right" class="profile-field-chevron"></i>
+                                </button>
+                                <button type="button" class="profile-field-row" data-profile-field="email">
+                                    <span class="profile-field-label">Email</span>
+                                    <span class="profile-field-value profile-field-value--muted">jana.s@university.edu.jo</span>
+                                    <i data-lucide="chevron-right" class="profile-field-chevron"></i>
+                                </button>
+                                <button type="button" class="profile-field-row" data-profile-field="phone">
+                                    <span class="profile-field-label">Phone number</span>
+                                    <span class="profile-field-value profile-field-value--muted">+962 7X XXX XXXX</span>
+                                    <i data-lucide="chevron-right" class="profile-field-chevron"></i>
+                                </button>
+                                <button type="button" class="profile-field-row" data-profile-field="profileLocation">
+                                    <span class="profile-field-label">Collection address</span>
+                                    <span class="profile-field-value profile-field-value--muted" id="profileLocationRowValue">Governorate + map pin or GPS</span>
+                                    <i data-lucide="chevron-right" class="profile-field-chevron"></i>
+                                </button>
+                            </div>
+                        </section>
+
+                        <section class="profile-card" aria-labelledby="profile-security-heading">
+                            <div class="profile-card-head">
+                                <h3 id="profile-security-heading">Sign-in &amp; security</h3>
+                            </div>
+                            <div class="profile-card-body">
+                                <button type="button" class="profile-field-row" data-profile-field="username">
+                                    <span class="profile-field-label">Username</span>
+                                    <span class="profile-field-value">janasaleh02</span>
+                                    <i data-lucide="chevron-right" class="profile-field-chevron"></i>
+                                </button>
+                                <button type="button" class="profile-field-row" data-profile-field="password">
+                                    <span class="profile-field-label">Password</span>
+                                    <span class="profile-field-value profile-field-value--muted" id="profilePasswordHint">Last updated 3 months ago</span>
+                                    <i data-lucide="chevron-right" class="profile-field-chevron"></i>
+                                </button>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="profile-footer-actions">
+                        <button type="button" class="profile-btn profile-btn--ghost" id="profileBackBtn">Back to dashboard</button>
+                        <button type="button" class="profile-btn profile-btn--primary" id="profileSaveBtn">Save changes</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <div class="modal" id="cancelModal">
+        <div class="modal-content">
+            <h2 style="color: #ff4444; margin-bottom: 10px;">Cancel Request?</h2>
+            <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 20px;">Please tell us why you are cancelling this request:</p>
+            
+            <select id="cancelReason" class="reason-select">
+                <option value="mistake">Wrong information entered</option>
+                <option value="not_ready">Items aren't ready for collection</option>
+                <option value="changed_mind">Changed my mind</option>
+                <option value="other">Other</option>
+            </select>
+
+            <textarea id="otherReasonText" class="reason-select" 
+                placeholder="Tell us more (optional)..." 
+                style="display: none; height: 80px; resize: none; margin-top: -10px;"></textarea>
+
+            <div style="display: flex; gap: 10px;">
+                <button type="button" id="confirmCancelBtn" class="submit-btn" style="background: #ff4444;">Confirm Cancel</button>
+                <button type="button" id="abortCancelBtn" class="seg-btn" style="flex: 1; border: 1px solid #333;">Go Back</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="profileEditModal">
+        <div class="modal-content profile-edit-modal-content">
+            <span class="close-modal" id="profileEditModalClose" role="button" tabindex="0">&times;</span>
+            <h2 id="profileEditModalTitle">Edit</h2>
+            <div id="profileEditModalStandardFields">
+                <div class="field">
+                    <label id="profileEditModalLabel" for="profileEditModalInput">Value</label>
+                    <input id="profileEditModalInput" autocomplete="off" />
+                </div>
+                <div class="field" id="profileEditConfirmWrap" style="display: none;">
+                    <label id="profileEditModalLabelConfirm" for="profileEditModalInputConfirm">Confirm new password</label>
+                    <input type="password" id="profileEditModalInputConfirm" autocomplete="new-password" />
+                </div>
+            </div>
+            <button type="button" class="submit-btn" id="profileEditModalSave">Apply</button>
+        </div>
+    </div>
+
+    <div class="modal" id="contactAdminModal">
+        <div class="modal-content contact-admin-modal-content">
+            <span class="close-modal" id="contactAdminClose" role="button" tabindex="0">&times;</span>
+            <h2 id="txtContactAdminTitle">Contact admin</h2>
+            <p class="contact-admin-intro" id="txtContactAdminIntro">Send a message to the ReLeaf team. We’ll use your profile email for replies.</p>
+            <p class="contact-admin-reply"><strong>Reply to:</strong> <span id="contactReplyEmailPreview">—</span></p>
+            <div class="field">
+                <label for="contactTopic" id="txtContactTopicLabel">Topic</label>
+                <select id="contactTopic">
+                    <option value="General question">General question</option>
+                    <option value="Collection or request">Collection or request</option>
+                    <option value="Account or profile">Account or profile</option>
+                    <option value="Billing or payments">Billing or payments</option>
+                    <option value="Feedback">Feedback</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="contactMessage" id="txtContactMessageLabel">Message</label>
+                <textarea id="contactMessage" rows="5" placeholder="Describe your question or issue…"></textarea>
+            </div>
+            <button type="button" class="submit-btn" id="contactSendBtn">Send in email app</button>
+            <p class="contact-admin-note" id="txtContactAdminNote">Opens your mail app with this message filled in. You can edit before sending.</p>
+        </div>
+    </div>
+
+    <div class="modal" id="profileLocationModal">
+        <div class="modal-content profile-loc-modal-content">
+            <span class="close-modal" id="profileLocationModalClose" role="button" tabindex="0">&times;</span>
+            <h2 id="txtCollectionAddressTitle">Collection address</h2>
+            <p class="profile-loc-intro" id="txtCollectionAddressIntro"><strong>Step 1:</strong> Choose your governorate (this matches how we route drivers). <strong>Step 2:</strong> Set a precise point with GPS or by moving the pin on the map — that’s where we’ll collect from you.</p>
+            <div class="field">
+                <label for="profileLocProvinceSelect">Governorate</label>
+                <select id="profileLocProvinceSelect" required></select>
+            </div>
+            <div class="profile-loc-actions">
+                <button type="button" class="seg-btn" id="profileLocGpsBtn">Use my current location</button>
+                <button type="button" class="seg-btn" id="profileLocShowMapBtn">Set pin on map</button>
+            </div>
+            <div id="profileLocMapWrap" style="display: none;">
+                <div id="profileLocMapContainer"></div>
+                <p class="profile-loc-map-hint">Drag the pin to your entrance, yard, or loading area.</p>
+            </div>
+            <button type="button" class="submit-btn" id="profileLocationSaveBtn">Apply address</button>
+        </div>
+    </div>
+
+    <div id="profileToast" class="toast toast-profile-success" aria-live="polite">
+        <i data-lucide="check-circle"></i>
+        <span id="profileToastText">Saved</span>
+    </div>
+
+    <template id="trackerTemplate">
+        <div class="arrival-card" style="padding: 30px; background: #161B22; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 20px;  position: relative;">
+            
+            <button class="card-cancel-btn" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: #ff4444; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.75rem; font-weight: 600; opacity: 0.8;">
+                <span aria-hidden="true" style="width:16px;height:16px;border:2px solid currentColor;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;line-height:1;font-weight:800;flex:0 0 16px;">×</span> Cancel
+            </button>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding-right: 80px;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 45px; height: 45px; background: rgba(86, 124, 141, 0.2); border-radius: 10px; display: grid; place-items: center; color: #C8D9E6;">
+                        <i data-lucide="clock"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1rem; margin-bottom: 2px;">Request Sent to Admin</h4>
+                        <p style="font-size: 0.8rem; opacity: 0.5;">ID: <span class="trackID">#0000</span></p>
+                    </div>
+                </div>
+                <div class="status-badge" style="background: rgba(255, 193, 7, 0.1); color: #ffc107; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; border: 1px solid rgba(255, 193, 7, 0.2);">
+                    AWAITING APPROVAL
+                </div>
+            </div>
+
+            <div class="trackHub" style="margin-top: 5px; font-size: 0.85rem; border-left: 3px solid #4caf50; padding-left: 12px; background: rgba(76, 175, 80, 0.05); padding-top: 8px; padding-bottom: 8px; border-radius: 0 8px 8px 0;">
+                </div>
+
+            <div style="display: flex; justify-content: space-between; position: relative; padding: 10px 0;">
+                <div style="position: absolute; top: 22px; left: 10%; right: 10%; height: 2px; background: #333; z-index: 1;"></div>
+                <div style="z-index: 2; text-align: center; width: 33%;">
+                    <div style="width: 24px; height: 24px; background: #4caf50; border-radius: 50%; margin: 0 auto 8px; border: 4px solid #161B22;"></div>
+                    <small style="font-size: 0.7rem; opacity: 0.9;">Request Created</small>
+                </div>
+                <div style="z-index: 2; text-align: center; width: 33%;">
+                    <div style="width: 24px; height: 24px; background: #333; border-radius: 50%; margin: 0 auto 8px; border: 4px solid #161B22;"></div>
+                    <small style="font-size: 0.7rem; opacity: 0.4;">Admin Assigned</small>
+                </div>
+                <div style="z-index: 2; text-align: center; width: 33%;">
+                    <div style="width: 24px; height: 24px; background: #333; border-radius: 50%; margin: 0 auto 8px; border: 4px solid #161B22;"></div>
+                    <small style="font-size: 0.7rem; opacity: 0.4;">Driver En Route</small>
+                </div>
+            </div>
+
+        </div>
+    </template>
+
+    <div class="modal" id="formModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeBtn">&times;</span>
+            <h2 id="txtNewRequestTitle">New Request</h2>
+            <form id="recycleForm">
+                <div class="form-row">
+                    <div class="field">
+                        <label id="txtPaperTypeLabel">Paper Type</label>
+                        <select id="paperStatus" required>
+                            <option value="damaged">Damaged</option>
+                            <option value="clean">Clean</option>
+                            <option value="carton">Carton</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label id="txtSourceLabel">Source</label>
+                        <select id="productSource" required>
+                            <option value="home">Home</option>
+                            <option value="school">School</option>
+                            <option value="university">University</option>
+                            <option value="company">Company</option>
+                            <option value="factory">Factory</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label id="txtWeightLabel">Weight (kg)</label>
+                        <span id="txtMinWeightHint" style="font-size: 0.75rem; color: #9ec3d4;">Add the minimum weight you estimate you have.</span>
+                    </div>
+                    <div class="weight-input-row">
+                        <input type="number" id="weight" min="0.1" step="0.1" required placeholder="0.0">
+                        <span id="weightGuideBtn" style="font-size: 0.75rem; color: #4caf50; cursor: pointer; text-decoration: underline; white-space: nowrap;">Weight Guide?</span>
+                    </div>
+                    
+                    <div id="weightGuideBox" style="display: none; margin-top: 12px; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 10px; font-size: 0.85rem; line-height: 1.5;">
+                        <p style="margin-bottom: 8px; color: #4caf50; font-weight: 600;">Common Estimates:</p>
+                        <ul style="list-style: none; padding: 0; opacity: 0.8;">
+                            <li>📦 <strong>Small Box:</strong> ~2-5 kg</li>
+                            <li>📦 <strong>Large Carton:</strong> ~10-15 kg</li>
+                            <li>📄 <strong>500 A4 Sheets:</strong> ~2.5 kg</li>
+                            <li>📚 <strong>Stack of Mags (30cm):</strong> ~8 kg</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="field">
+                    <label id="txtCollectionDateLabel">Preferred collection date</label>
+                    <div class="date-field-wrap">
+                        <input type="date" id="collectionDate" required aria-describedby="collectionDateHint" title="Click the calendar icon to choose the date">
+                        <small id="collectionDateHint" class="calendar-hint" data-i18n="calendarHint"></small>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label id="txtAvailableAtLabel">Preferred collection time</label>
+                    <select id="availableSlot" required>
+                        <option value="09:00-11:00">09:00 - 11:00</option>
+                        <option value="11:00-13:00">11:00 - 13:00</option>
+                        <option value="13:00-15:00">13:00 - 15:00</option>
+                        <option value="15:00-17:00">15:00 - 17:00</option>
+                        <option value="17:00-19:00">17:00 - 19:00</option>
+                        <option value="19:00-21:00">19:00 - 21:00</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label id="txtActionTypeLabel">Action Type</label>
+                    <div class="segmented-control" id="actionToggle">
+                        <button type="button" class="seg-btn" data-val="sell">Sell</button>
+                        <button type="button" class="seg-btn" data-val="donate">Donate</button>
+                        <button type="button" class="seg-btn" data-val="exchange">Exchange</button>
+                    </div>
+                </div>
+
+                <div class="field" id="exchangeChoiceWrap" style="display: none;">
+                    <label id="txtExchangeChoiceLabel">Choose exchange reward</label>
+                    <select id="exchangeChoice">
+                        <option value="artwork">Recycled paper artwork</option>
+                        <option value="paper_bundle">Clean paper bundle</option>
+                        <option value="stationery">Eco stationery pack</option>
+                        <option value="storage_boxes">Recycled carton storage boxes</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label id="txtLocationForRequestLabel">Location for this request</label>
+                    <p class="form-field-hint" id="txtLocationForRequestHint" style="margin: 0 0 10px; font-size: 0.8rem; opacity: 0.65; line-height: 1.4;">Your saved collection address is used for routing. Here, choose whether this request uses the map or a governorate and area list.</p>
+                    <div class="location-toggle-group">
+                        <button type="button" class="loc-btn" data-mode="gps">GPS / Map</button>
+                        <button type="button" class="loc-btn" data-mode="manual">Manual entry</button>
+                    </div>
+                </div>
+
+                <div id="manualLocationFields" style="display: none; margin-top: 15px;">
+                    <div class="field">
+                        <label id="txtGovernorateLabel">Governorate</label>
+                        <select id="province" aria-label="Governorate"></select>
+                    </div>
+                    <div class="field" style="margin-top: 10px;">
+                        <label id="txtDistrictLabel">District / area</label>
+                        <select id="district" disabled aria-label="District or area"></select>
+                    </div> 
+                </div>
+
+                <div id="mapWrapper">
+                    <div id="mapContainer" style="width: 100%; height: 180px; border-radius: 12px; border: 1px solid #333;"></div>
+                </div>
+
+                <div class="field">
+                    <label id="txtNotesLabel">Notes</label>
+                    <textarea id="notes" placeholder="Additional details..."></textarea>
+                </div>
+
+                <div class="table-container" style="background: linear-gradient(145deg, rgba(76, 175, 80, 0.1), rgba(0, 0, 0, 0)); border: 1px solid rgba(76, 175, 80, 0.2); margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <i data-lucide="help-circle" style="color: #4caf50;"></i>
+                        <div>
+                            <h4 style="margin: 0;">Unsure about the size?</h4>
+                            <p style="font-size: 0.85rem; opacity: 0.7; margin: 5px 0 0;">Standard cartons usually weigh between 10-20kg. If you don't have a scale, just give us your best guess!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="txtSubmitRequestBtn">Submit Request</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="cancelToast" class="toast"><i data-lucide="check-circle" style="color: #ff4444; width: 18px;"></i> Request Cancelled </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <script src="script.js"></script>
+    <script src="i18n-pro.js"></script>
+    <script>
+        lucide.createIcons();
+
+        // Weight Guide Toggle
+        const weightGuideBtn = document.getElementById('weightGuideBtn');
+        const weightGuideBox = document.getElementById('weightGuideBox');
+
+        weightGuideBtn.addEventListener('click', () => {
+            const isHidden = weightGuideBox.style.display === 'none';
+            weightGuideBox.style.display = isHidden ? 'block' : 'none';
+            const ar = document.documentElement.lang === 'ar';
+            weightGuideBtn.innerText = isHidden ? (ar ? 'إغلاق الدليل' : 'Close Guide') : (ar ? 'دليل الوزن؟' : 'Weight Guide?');
+        });
+
+        // Logic to show/hide the "Other" reason textarea
+        const cancelReasonSelect = document.getElementById('cancelReason');
+        const otherReasonText = document.getElementById('otherReasonText');
+
+        cancelReasonSelect.addEventListener('change', function() {
+            if (this.value === 'other') {
+                otherReasonText.style.display = 'block';
+            } else {
+                otherReasonText.style.display = 'none';
+            }
+        });
+    </script>
+    <script src="firebase-sync.js"></script>
+</body>
+</html>

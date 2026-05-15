@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   ReLeaf - Login
+  </title>
+  <link href="csss.css" rel="stylesheet"/>
+ </head>
+ <body class="auth-page">
+  <div class="auth-controls">
+   <a class="mini-link" data-i18n="backHome" href="HH.html">
+    ← Home
+   </a>
+   <button class="control-btn" id="themeToggle">
+   </button>
+   <select class="control-select" id="languageToggle">
+    <option value="en">
+     English
+    </option>
+    <option value="ar">
+     العربية
+    </option>
+   </select>
+  </div>
+  <div class="container">
+   <div class="card">
+    <img class="auth-logo" src="logo.jpg"/>
+    <h2 data-i18n="loginTitle">
+     Welcome Back
+    </h2>
+    <p data-i18n="loginSub">
+     Login to your ReLeaf account
+    </p>
+    <label data-i18n="role">
+     Account type
+    </label>
+    <select id="roleSelect">
+     <option data-i18n="customer" value="customer">
+      Customer
+     </option>
+     <option data-i18n="admin" value="admin">
+      Admin
+     </option>
+    </select>
+    <input data-i18n-placeholder="username" id="username" placeholder="Username" type="text"/>
+    <small id="userMsg">
+    </small>
+    <div class="password-wrap">
+     <input data-i18n-placeholder="password" id="password" placeholder="Password" type="password"/>
+     <button aria-label="Show password" class="toggle-password" data-target="password" type="button">
+      👁
+     </button>
+    </div>
+    <small id="passMsg">
+    </small>
+    <button data-i18n="login" onclick="login()">
+     Login
+    </button>
+    <p class="login-link">
+     <span data-i18n="noAccount">
+      Don't have an account?
+     </span>
+     <a data-i18n="signup" href="signup.html">
+      Sign Up
+     </a>
+    </p>
+   </div>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="firebase-init.js"></script>
+  <script src="jj.js"></script>
+  <script src="firebase-sync.js"></script>
+ </body>
+</html>

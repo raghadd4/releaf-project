@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReLeaf Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="styleR.css">
+</head>
+<body>
+<div class="container">
+<aside class="sidebar">
+  <div class="brand"><img src="logo.jpg" class="brand-logo" alt="ReLeaf Logo"><span>ReLeaf</span></div>
+  <ul>
+    <li class="active-link" onclick="showPage('dashboard', this)"><i class="fa-solid fa-chart-line"></i> <span id="dashText"></span></li>
+    <li onclick="showPage('users', this)"><i class="fa-solid fa-users"></i> <span id="usersText"></span></li>
+    <li onclick="showPage('requests', this)"><i class="fa-solid fa-clipboard-list"></i> <span id="reqText"></span></li>
+    <li onclick="showPage('reports', this)"><i class="fa-solid fa-file-export"></i> <span id="repText"></span></li>
+    <li onclick="showPage('settings', this)"><i class="fa-solid fa-gear"></i> <span id="setText"></span></li>
+    <li class="logout-item" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> <span id="logoutText"></span></li>
+  </ul>
+</aside>
+<main class="main">
+  <div class="topbar">
+    <h2 id="welcomeText"><i class="fa-solid fa-user-shield"></i></h2>
+    <div class="topbar-actions">
+      <button class="theme-toggle" type="button" onclick="toggleThemeQuick()"><i class="fa-solid fa-circle-half-stroke"></i> <span id="themeQuickText"></span></button>
+    </div>
+  </div>
+  <section class="header-info"><div><h2 id="mainTitle"></h2><p id="mainDesc"></p></div></section>
+  <section id="dashboard" class="page active">
+    <div class="dashboard-cards">
+      <div class="card"><span class="card-icon"><i class="fa-solid fa-users"></i></span><h4 id="cardUsersText"></h4><p>--</p></div>
+      <div class="card"><span class="card-icon"><i class="fa-solid fa-clipboard-list"></i></span><h4 id="cardRequestsText"></h4><p>--</p></div>
+      <div class="card"><span class="card-icon"><i class="fa-solid fa-circle-check"></i></span><h4 id="cardCompletedText"></h4><p>--</p></div>
+      <div class="card"><span class="card-icon"><i class="fa-solid fa-clock"></i></span><h4 id="cardPendingText"></h4><p>--</p></div>
+    </div>
+    <div class="filter-box">
+  <label for="filterSelect"><i class="fa-solid fa-filter"></i><span>Filter</span></label>
+  <select id="filterSelect" onchange="filterData(this.value)">
+    <option value="today">Today</option>
+    <option value="week">This Week</option>
+    <option value="month">This Month</option>
+  </select>
+</div>
+    <div class="charts-container">
+
+  <!-- Chart 1: Requests Over Time -->
+  <div class="chart-box">
+    <h3>Requests Over Time</h3>
+    <canvas id="requestsChart"></canvas>
+  </div>
+
+  <!-- Chart 2: Material Type -->
+  <div class="chart-box">
+    <h3>Material Distribution</h3>
+    <canvas id="materialsChart"></canvas>
+  </div>
+
+  <!-- Chart 3: Status -->
+  <div class="chart-box">
+    <h3>Request Status</h3>
+    <canvas id="statusChart"></canvas>
+  </div>
+
+</div>
+    <div class="table-box">
+      <input id="searchBox" type="text" placeholder="Search user..." onkeyup="searchUsers()">
+      <h3 id="latestRequestsTitle"></h3>
+      <table><thead><tr><th id="thUser"></th><th id="thType"></th><th id="thWeight"></th><th id="thStatus"></th></tr></thead><tbody></tbody></table>
+    </div>
+    <div class="actions">
+      <button onclick="showPage('reports')"><i class="fa-solid fa-file-lines"></i> <span id="viewReportsBtnText"></span></button>
+      <button onclick="showPage('requests')"><i class="fa-solid fa-list-check"></i> <span id="checkRequestsBtnText"></span></button>
+    </div>
+  </section>
+  <section id="users" class="page">
+    <div class="admin-section-head">
+      <div>
+        <h3 id="usersPageTitle">Users</h3>
+        <p id="usersPageDesc" class="muted">Registered customers from the signup page.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="requests" class="page">
+    <div class="admin-section-head">
+      <div>
+        <h3 id="requestsPageTitle">Requests</h3>
+        <p id="requestsPageDesc" class="muted">Customer requests submitted from the user dashboard.</p>
+      </div>
+      <button class="admin-export-btn" type="button" onclick="downloadReport()"><i class="fa-solid fa-file-arrow-down"></i> Download Report</button>
+    </div>
+    <div class="request-toolbar">
+  <input id="requestSearchBox" type="hidden" value="">
+
+  <select id="requestStatusFilter" onchange="filterRequests(this.value)">
+    <option value="all">All</option>
+    <option value="sent">Awaiting Approval</option>
+    <option value="approved">Approved</option>
+    <option value="driver_en_route">Driver En Route</option>
+    <option value="completed">Completed</option>
+    <option value="canceled">Canceled</option>
+  </select>
+</div>
+
+<div id="requestsContainer" class="admin-requests-grid"></div>
+  </section>
+
+  <section id="reports" class="page">
+    <div class="admin-section-head">
+      <div>
+        <h3 id="reportsPageTitle">Reports</h3>
+        <p id="reportsPageDesc" class="muted">Summary and export for the same live request data.</p>
+      </div>
+      <button class="admin-export-btn" type="button" onclick="downloadReport()"><i class="fa-solid fa-file-csv"></i> Download CSV</button>
+    </div>
+    <div class="insights-box pro-insights">
+      <p id="topMaterial">Top Material: --</p>
+      <p id="requestsTrend">Requests: --</p>
+      <p id="topUser">Top User: --</p>
+      <p id="totalWeightReport">Total Weight: --</p>
+    </div>
+    <div class="table-box pro-table-box">
+      <table>
+        <thead>
+          <tr>
+            <th>User</th><th>Material</th><th>Action</th><th>Status</th><th>Weight</th><th>Preferred Date</th><th>Preferred Time</th><th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="reportsTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+  <section id="settings" class="page">
+    <div class="admin-profile-layout">
+      <div class="admin-profile-hero">
+        <div class="admin-photo-block">
+          <div class="admin-avatar" id="adminAvatar"><img id="adminAvatarImg" alt="" /></div>
+          <input type="file" id="adminPhotoInput" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+          <div class="admin-photo-actions">
+            <button type="button" class="photo-action" id="adminPhotoChooseBtn" onclick="chooseAdminPhoto()"></button>
+            <button type="button" class="photo-action remove" id="adminPhotoRemoveBtn" onclick="removeAdminPhotoDraft()"></button>
+          </div>
+        </div>
+        <div class="admin-hero-copy">
+          <p class="eyebrow" id="adminProfileEyebrow"></p>
+          <h2 id="adminNameDisplay">Admin</h2>
+          <p id="adminEmailDisplay">admin@releaf.com</p>
+          <div class="admin-badges">
+            <span><i class="fa-solid fa-shield-check"></i> <span id="adminRoleDisplay"></span></span>
+            <span><i class="fa-solid fa-circle-check"></i> <span id="adminVerifiedDisplay"></span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-grid">
+        <div class="settings-panel account-panel">
+          <h3 id="accountInfoTitle"></h3>
+          <p class="panel-desc" id="accountInfoDesc"></p>
+          <label id="accountLabel"></label>
+          <input type="text" id="nameInput">
+          <label id="emailLabel"></label>
+          <input type="email" id="emailInput">
+          <label id="phoneLabel"></label>
+          <input type="tel" id="phoneInput">
+        </div>
+
+        <div class="settings-panel profile-summary-panel">
+          <h3 id="profileSummaryTitle"></h3>
+          <div class="summary-row"><span id="summaryRoleLabel"></span><strong id="summaryRoleValue"></strong></div>
+          <div class="summary-row"><span id="summaryPhoneLabel"></span><strong id="adminPhoneDisplay"></strong></div>
+          <div class="summary-row"><span id="summaryJoinedLabel"></span><strong id="adminJoinedDisplay">January 2026</strong></div>
+          <div class="summary-row"><span id="summaryLastLoginLabel"></span><strong id="adminLastLoginDisplay"></strong></div>
+        </div>
+
+        <div class="settings-panel preferences-panel">
+          <h3 id="preferencesTitle"></h3>
+          <label id="themeLabel"></label>
+          <select id="themeSelect" onchange="changeTheme()"><option value="light" id="themeLightOption"></option><option value="dark" id="themeDarkOption"></option></select>
+          <label id="languageLabel"></label>
+          <select id="languageSelect" onchange="changeLanguage(this.value)"><option value="en">English</option><option value="ar">العربية</option></select>
+        </div>
+
+        <div class="settings-panel security-panel">
+          <h3 id="securityTitle"></h3>
+          <p class="panel-desc" id="securityDesc"></p>
+          <label id="passwordLabel"></label>
+          <input type="password" id="passInput">
+          <div class="security-note"><i class="fa-solid fa-lock"></i><span id="securityNote"></span></div>
+        </div>
+      </div>
+
+      <div class="settings-actions-pro">
+        <button onclick="saveSettings()" id="saveSettingsBtn"></button>
+      </div>
+    </div>
+  </section>
+</main>
+</div>
+<div class="modal-backdrop" id="addUserModal" aria-hidden="true">
+  <div class="user-modal" role="dialog" aria-modal="true" aria-labelledby="addUserModalTitle">
+    <button class="modal-close" type="button" onclick="closeAddUserModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-head"><span class="modal-icon"><i class="fa-solid fa-user-plus"></i></span><div><h2 id="addUserModalTitle"></h2><p id="addUserModalDesc"></p></div></div>
+    <form id="addUserForm" onsubmit="submitAddUser(event)">
+      <div class="form-grid">
+        <div class="field full"><label for="newUserName" id="newUserNameLabel"></label><input id="newUserName" type="text" required></div>
+        <div class="field"><label for="newUserType" id="newUserTypeLabel"></label><select id="newUserType" required><option value="Damaged" id="typeDamagedOption"></option><option value="Clean" id="typeCleanOption"></option><option value="Carton" id="typeCartonOption"></option></select></div>
+        <div class="field"><label for="newUserWeight" id="newUserWeightLabel"></label><input id="newUserWeight" type="number" min="0.1" step="0.1" required></div>
+        <div class="field full"><label for="newUserStatus" id="newUserStatusLabel"></label><select id="newUserStatus" required><option value="Pending" id="statusPendingOption"></option><option value="Completed" id="statusCompletedOption"></option></select></div>
+      </div>
+      <div class="modal-actions"><button type="button" class="btn-ghost" onclick="closeAddUserModal()" id="cancelUserBtn"></button><button type="submit" class="btn-primary" id="saveUserBtn"></button></div>
+    </form>
+  </div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="firebase-init.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="jsR.js"></script>
+<script src="firebase-sync.js"></script>
+</body>
+</html>
