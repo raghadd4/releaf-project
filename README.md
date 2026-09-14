@@ -1,218 +1,135 @@
-# ReLeaf 🌱  
-### Smart Paper Recycling Management Platform
+# ReLeaf
 
-ReLeaf is a web-based recycling management platform designed to connect businesses and institutions with recycling centers in Jordan.  
-The system helps users schedule paper and carton recycling pickups, track requests, and promote environmentally sustainable practices through an organized digital workflow.
+**Smart paper & carton recycling management platform for Jordan.**
 
----
+ReLeaf is a bilingual (Arabic/English) web platform that connects
+individuals and institutions with recycling collection — replacing manual,
+unorganized pickup arrangements with a centralized system where customers
+can schedule and track recycling requests, and admins can manage
+collections, users, and reporting through a dedicated dashboard.
 
-# 📌 Project Overview
+Built as a graduation project at Al-Balqa Applied University, Prince
+Abdullah Bin Ghazi Faculty of Information and Communication Technology
+(2025–2026).
 
-Paper waste management is still inefficient in many organizations.  
-ReLeaf aims to simplify the recycling process by providing a centralized platform where:
-
-- Customers can submit recycling requests
-- Recycling centers/admins can manage collections
-- Pickup locations can be tracked
-- Recycling activity can be monitored through dashboards
-
-The platform focuses on:
-- Sustainability
-- Accessibility
-- User-friendly experience
-- Real-world applicability
+**Live demo:** [raghadd4.github.io/releaf-project](https://raghadd4.github.io/releaf-project/)
 
 ---
 
-# ✨ Features
+## The problem
 
-## 👤 Customer Features
-- User registration and login
-- Arabic & English language support
-- Dark/Light mode
+Paper and carton recycling in Jordan is still largely manual: no
+centralized way to request a pickup, no tracking once a request is made,
+and no easy way for recycling centers to manage requests or see collection
+activity at a glance. That friction discourages participation even from
+people who want to recycle.
+
+## Features
+
+### Customer
+- Registration and login (Firebase Authentication)
+- Arabic & English language support, with full RTL/LTR layout switching
+- Dark / light mode
 - Profile management
-- GPS-based pickup location
-- Interactive map pin selection
-- Submit paper/carton recycling requests
-- Request tracking system
-- Recycling statistics
-- Rank/progress system
+- GPS-based pickup location, plus interactive map pin selection
+  (Leaflet.js + OpenStreetMap)
+- Submit and track paper/carton recycling requests
+- Recycling stats: total weight recycled, trees saved, request history
+- Rank / progress system that rewards continued participation
 - Contact admin support
 
----
-
-## 🛠️ Admin Features
-- Admin dashboard
-- User management
-- Request management
-- Request filtering/search
-- Recycling reports
-- CSV export
+### Admin
+- Admin dashboard: total users, total requests, completed requests
+- User and request management, with filtering/search
+- Approve, update, or reject requests
+- Recycling reports and analytics, with CSV export
 - Notifications
 - Theme & language settings
 
----
+## Tech stack
 
-# 🌍 Localization Support
+| Layer          | Technology                                      |
+|----------------|--------------------------------------------------|
+| Front-end      | HTML5, CSS3, JavaScript (vanilla)                 |
+| Backend / BaaS | Firebase Authentication, Firebase Firestore       |
+| Maps           | Leaflet.js, OpenStreetMap API                     |
+| Icons          | Font Awesome, Lucide                              |
+| i18n           | Custom translation system with RTL/LTR support    |
 
-ReLeaf supports:
-- English 🇺🇸
-- Arabic 🇯🇴
+## Project structure
 
-The platform dynamically changes:
-- Text content
-- Layout direction (LTR / RTL)
-- UI elements
-
----
-
-# 🧩 Technologies Used
-
-## Frontend
-- HTML5
-- CSS3
-- JavaScript (Vanilla JS)
-
-## Backend / Database
-- Firebase Authentication
-- Firebase Firestore
-
-## Libraries & APIs
-- Leaflet.js (Interactive Maps)
-- Lucide Icons
-- Font Awesome
-- OpenStreetMap API
-
----
-
-# 🗂️ Project Structure
-
+```
 ReLeaf/
-│
-├── HH.html                 # Landing page
-├── login.html              # Login page
-├── signup.html             # Registration page
+├── HH.html              # Landing page
+├── login.html            # Login page
+├── signup.html            # Registration page
 ├── customer.html           # Customer dashboard
-├── admin.html              # Admin dashboard
+├── admin.html               # Admin dashboard
 │
-├── style.css               # Customer dashboard styles
+├── style.css              # Customer dashboard styles
 ├── styleM.css              # Landing page styles
-├── styleR.css              # Admin dashboard styles
-├── csss.css                # Authentication pages styles
+├── styleR.css               # Admin dashboard styles
+├── csss.css                  # Authentication page styles
 │
 ├── script.js               # Customer dashboard logic
-├── jj.js                   # Landing/auth logic + translations
-├── jsR.js                  # Admin dashboard logic
+├── jj.js                     # Landing/auth logic + translations
+├── jsR.js                     # Admin dashboard logic
 │
-├── firebase-init.js        # Firebase configuration
-├── firebase-sync.js        # Firestore synchronization
-├── i18n-pro.js             # Translation system
+├── firebase-init.js         # Firebase configuration
+├── firebase-sync.js          # Firestore synchronization
+├── i18n-pro.js                 # Translation system
 │
 └── assets/
     ├── logo.jpg
     ├── top.png
     └── icons/
+```
 
----
+## How to run
 
-# 🔐 Authentication System
+**Option 1 — Simple local run**
+1. Download the project files.
+2. Open `HH.html` in a browser.
 
-The platform uses Firebase Authentication for:
-- User login
-- User signup
-- Role-based access (Customer/Admin)
+**Option 2 — VS Code Live Server (recommended)**
+1. Open the project folder in VS Code.
+2. Install the Live Server extension.
+3. Right-click `HH.html` → "Open with Live Server".
 
----
+## Current limitations
 
-# 🗺️ GPS & Location Features
+- The system currently relies heavily on client-side logic.
+- Some data is stored using `localStorage`.
+- Firestore security rules would need hardening for a production deployment.
+- The JavaScript could be further modularized.
 
-Users can:
-- Use their current GPS location
-- Select locations manually on a map
-- Choose Jordanian governorates and districts
+## Future plans
 
-This helps organize recycling pickups more accurately.
-
----
-
-# 📊 Dashboard System
-
-## Customer Dashboard
-Displays:
-- Recycling progress
-- Trees saved
-- Total recycled weight
-- Request history
-- User ranking system
-
-## Admin Dashboard
-Displays:
-- Total users
-- Total requests
-- Completed requests
-- Request reports and analytics
-
----
-
-# ♻️ Environmental Impact
-
-ReLeaf encourages:
-- Sustainable recycling habits
-- Reduction of paper waste
-- Better recycling logistics
-- Environmental awareness
-
-The platform gamifies recycling by rewarding users with progress levels based on recycling activity.
-
----
-
-# 🚀 Future Improvements
-
-Potential future enhancements include:
-
-- Real-time notifications
-- Mobile application version
-- AI-based recycling recommendations
+- Native mobile app version
+- Real-time push notifications
+- Driver / collection tracking
 - QR-code pickup verification
-- Driver tracking system
-- Advanced analytics dashboard
 - Cloud image uploads
-- Secure backend API
+- A proper backend API instead of client-side-only logic
+- Partnerships with recycling companies, municipalities, and environmental
+  organizations
 
----
+## Team
 
-# ⚠️ Current Limitations
+Graduation project by:
+- Raghad Ahmad Abdelrahman
+- Raneem Ashraf Alwrikat
+- Mayar Ahmad Alajrami
 
-- The system currently relies heavily on client-side logic
-- Some data is stored using localStorage
-- Security rules can be improved for production deployment
-- JavaScript files can be further modularized
+Supervised by Dr. Khalid Alkharabsheh, Al-Balqa Applied University.
 
----
+## Documentation
 
-# 🧪 How to Run the Project
+The full academic report (`ReLeaf documentation.docx`) and project
+presentation (`ReLeaf presentation.pdf`) are included in this repo, covering
+the complete SDLC: planning, feasibility study, SWOT analysis, requirements,
+UML diagrams (use case, ER, flowcharts), and UI/UX design process.
 
-## Option 1 — Simple Local Run
-1. Download the project files
-2. Open HH.html in a browser
+## License
 
-## Option 2 — VS Code Live Server (Recommended)
-1. Open the project folder in VS Code
-2. Install the Live Server extension
-3. Right-click HH.html
-4. Select Open with Live Server
-
----
-
-# 👨‍💻 Team / Authors
-
-Developed as a Graduation Project for Software Engineering / Computer Science.
-
-Project Name: ReLeaf  
-Year: 2026
-
----
-
-# 📄 License
-
-This project was developed for educational and academic purposes.
+Developed for educational and academic purposes.
